@@ -3,47 +3,23 @@ Problem: https://practice.geeksforgeeks.org/problems/clone-a-binary-tree/
 """
 
 class Solution:
-    def cloneTree(self, root):
-        def updateRandomPointers(root, dict):
-            # base case
-            if dict.get(root) is None:
-                return
-         
-            # update the random pointer of the cloned node
-            dict.get(root).random = dict.get(root.random)
-         
-            # recur for the left and right subtree
-            updateRandomPointers(root.left, dict)
-            updateRandomPointers(root.right, dict)
-            
-        def cloneLeftRightPointers(root, dict):
-            if root is None:
-                return None
-         
-            # clone all fields of the root node except the random pointer
-         
-            # create a new node with the same data as the root node
-            dict[root] = Node(root.data)
-         
-            # clone the left and right subtree
-            dict[root].left = cloneLeftRightPointers(root.left, dict)
-            dict[root].right = cloneLeftRightPointers(root.right, dict)
-         
-            # return cloned root node
-            return dict[root]
-            
-        def cloneSpecialBinaryTree(root):
-            # create a dictionary to store mappings from a node to its clone
-            dict = {}
-         
-            # clone data, left, and right children for each node of the original
-            # binary tree, and put references into the dictionary
-            cloneLeftRightPointers(root, dict)
-         
-            # update random pointers from the original binary tree in the dictionary
-            updateRandomPointers(root, dict)
-         
-            # return the cloned root node
-            return dict[root]
-        
-        return cloneSpecialBinaryTree(root)
+    def cloneTree(self, tree):
+        from collections import defaultdict
+        mapp = defaultdict()
+        def clone(root):
+            nonlocal mapp
+            if root is None: return
+            new = Node(root.data)
+            mapp[new] = new
+            new.left = clone(root.left)
+            new.right = clone(root.right)
+            if root.random:
+                if root.random in mapp:
+                    new.random = mapp[root.random]
+                else:
+                    new.random = Node(root.random.data)
+                    mapp[new.random] = new.random
+            else:
+                new.random = None
+            return new
+        return clone(tree)
