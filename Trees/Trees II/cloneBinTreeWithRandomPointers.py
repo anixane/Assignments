@@ -1,5 +1,6 @@
 """
 Problem: https://practice.geeksforgeeks.org/problems/clone-a-binary-tree/
+Solution: Simple dfs with hashing application problem
 """
 
 class Solution:
